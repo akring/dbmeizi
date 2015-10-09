@@ -8,6 +8,8 @@
 
 import pymongo
 import json
+import urllib
+import os
 
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
@@ -36,10 +38,11 @@ class MongoDBPipeline(object):
                     level=log.DEBUG, spider=spider)
         return item
 
+# 根目录下生成JSON文件
 class JsonWriterPipeline(object):
 
     def __init__(self):
-        self.file = open('items.jl', 'wb')
+        self.file = open('items.json', 'wb')
 
     def process_item(self, item, spider):
 
@@ -48,6 +51,7 @@ class JsonWriterPipeline(object):
 
         return item
 
+# 检查并去重
 class DuplicatesPipeline(object):
 
     def __init__(self):
@@ -58,4 +62,31 @@ class DuplicatesPipeline(object):
             raise DropItem("Duplicate item found: %s" % item)
         else:
             self.ids_seen.add(item['datasrc'])
+        return item
+
+# 图片写入本地
+class WriteToDiskPipeline(object):
+
+    def __init__(self):
+        pass
+
+    def process_item(self, item, spider):
+
+        link = item['datasrc']
+        title = item['title']
+
+        filefolder = '/Users/akring/Desktop/pic'
+        filesavepath = '/Users/akring/Desktop/pic/%s.png' % title
+
+        # 如果路径不存在，则创建路径
+        if not os.path.exists(filefolder):
+                os.mkdir(filefolder)
+
+        # 如果存在重名文件，则不再次下载
+        if os.path.exists(filesavepath) and os.path.isfile(filesavepath):
+            print ("File already exists")
+        else:
+            print link
+            urllib.urlretrieve(link, filesavepath)
+
         return item
