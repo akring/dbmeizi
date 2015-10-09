@@ -1,8 +1,6 @@
 from scrapy import Spider
 from scrapy.selector import Selector
 from dbmeizi.items import MeiziItem
-import os
-import urllib
 
 
 class dbmeiziSpider(Spider):
