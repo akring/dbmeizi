@@ -7,6 +7,7 @@
 
 
 import pymongo
+import json
 
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
@@ -33,4 +34,28 @@ class MongoDBPipeline(object):
             self.collection.insert(dict(item))
             log.msg("Meizi added to MongoDB database!",
                     level=log.DEBUG, spider=spider)
+        return item
+
+class JsonWriterPipeline(object):
+
+    def __init__(self):
+        self.file = open('items.jl', 'wb')
+
+    def process_item(self, item, spider):
+
+        line = json.dumps(dict(item)) + "\n"
+        self.file.write(line)
+
+        return item
+
+class DuplicatesPipeline(object):
+
+    def __init__(self):
+        self.ids_seen = set()
+
+    def process_item(self, item, spider):
+        if item['datasrc'] in self.ids_seen:
+            raise DropItem("Duplicate item found: %s" % item)
+        else:
+            self.ids_seen.add(item['datasrc'])
         return item

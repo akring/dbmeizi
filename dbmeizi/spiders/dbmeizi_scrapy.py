@@ -21,9 +21,12 @@ class dbmeiziSpider(Spider):
         for image in itemBlock.xpath('//img'):
             # self.writeToDisk(image)
             item = MeiziItem()
-            item['title'] = image.xpath('@alt').extract()
-            item['dataid'] = image.xpath('@data-id').extract()
-            item['datasrc'] = image.xpath('@src').extract()
+            if len(image.xpath('@alt').extract()):
+                item['title'] = image.xpath('@alt').extract()[0]
+            if len(image.xpath('@data-id').extract()):
+                item['dataid'] = image.xpath('@data-id').extract()[0]
+            if len(image.xpath('@src').extract()):
+                item['datasrc'] = image.xpath('@src').extract()[0]
             item['startcount'] = 0
             yield item
         """

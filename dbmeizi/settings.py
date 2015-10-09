@@ -12,7 +12,11 @@
 BOT_NAME = 'dbmeizi'
 SPIDER_MODULES = ['dbmeizi.spiders']
 NEWSPIDER_MODULE = 'dbmeizi.spiders'
-ITEM_PIPELINES = ['dbmeizi.pipelines.MongoDBPipeline', ]
+ITEM_PIPELINES = {
+    'dbmeizi.pipelines.MongoDBPipeline': 800,
+    'dbmeizi.pipelines.JsonWriterPipeline': 900,
+    'dbmeizi.pipelines.DuplicatesPipeline': 300,
+}
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
 MONGODB_DB = "dbmeizi"
