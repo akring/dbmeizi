@@ -10,13 +10,17 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'dbmeizi'
-
 SPIDER_MODULES = ['dbmeizi.spiders']
 NEWSPIDER_MODULE = 'dbmeizi.spiders'
+ITEM_PIPELINES = ['dbmeizi.pipelines.MongoDBPipeline', ]
+MONGODB_SERVER = "localhost"
+MONGODB_PORT = 27017
+MONGODB_DB = "dbmeizi"
+MONGODB_COLLECTION = "meizi"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'dbmeizi (+http://www.yourdomain.com)'
+# USER_AGENT = 'dbmeizi (+http://www.yourdomain.com)'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
