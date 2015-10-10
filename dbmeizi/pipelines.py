@@ -17,7 +17,6 @@ from scrapy import log
 
 
 class MongoDBPipeline(object):
-
     def __init__(self):
         connection = pymongo.MongoClient(
             settings['MONGODB_SERVER'],
@@ -38,22 +37,21 @@ class MongoDBPipeline(object):
                     level=log.DEBUG, spider=spider)
         return item
 
+
 # 根目录下生成JSON文件
 class JsonWriterPipeline(object):
-
     def __init__(self):
         self.file = open('items.json', 'wb')
 
     def process_item(self, item, spider):
-
         line = json.dumps(dict(item)) + "\n"
         self.file.write(line)
 
         return item
 
+
 # 检查并去重
 class DuplicatesPipeline(object):
-
     def __init__(self):
         self.ids_seen = set()
 
@@ -64,9 +62,9 @@ class DuplicatesPipeline(object):
             self.ids_seen.add(item['datasrc'])
         return item
 
+
 # 图片写入本地
 class WriteToDiskPipeline(object):
-
     def __init__(self):
         pass
 
@@ -80,7 +78,7 @@ class WriteToDiskPipeline(object):
 
         # 如果路径不存在，则创建路径
         if not os.path.exists(filefolder):
-                os.mkdir(filefolder)
+            os.mkdir(filefolder)
 
         # 如果存在重名文件，则不再次下载
         if os.path.exists(filesavepath) and os.path.isfile(filesavepath):
